@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule Viewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+        integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .day-block {
+            margin-bottom: 28px;
+            padding: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .day-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .event {
+            background: #DCEAF7;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .event:hover {
+            background: #e9d5ff;
+        }
+
+        .event-title {
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        .event-desc {
+            font-size: 18px;
+        }
+
+        .event-tap {
+            float: right;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: right;
+            padding: 10px;
+        }
+
+        .event::before {
+            content: "";
+            position: absolute;
+            left: 16px;
+            /* canh theo padding text */
+            right: 16px;
+            bottom: 0;
+            height: 3px;
+            background-color: #0078d4;
+            /* Màu giống Windows Security */
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 2px;
+            transform-origin: left;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<div class="container" style="margin: 0px auto">
+    <div>
+        <img src="https://nctu.edu.vn/webp/logo_truong.webp" alt="" width="22%" srcset=""
+            style="margin: 1.2rem auto 0.5rem auto;">
+        <div class="mb-3 flex justify-between items-center">
+            <p class="text-2xl font-bold text-gray-900 flex">
+                <!-- <svg class="h-6 w-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg> -->
+                Lịch công tác
+            </p>
+            <!-- <button id="toggleView" class="px-4 py-2 border rounded-md bg-white hover:bg-gray-100">Show Week</button> -->
+            <p class="text-xl font-bold text-gray-900 flex">Tuần 12 (00/00 - 00/00/2025)</p>
+        </div>
+    </div>
+    <div class="controls">
+        <!-- <button id="toggleView">Hiển thị 3 ngày</button> -->
+    </div>
+    <div id="scheduleWrapper"></div>
+</div>
+
+
+<body class="bg-white">
+    <!-- <div class="min-h-screen bg-white p-4 max-w-3xl mx-auto">
+        <div class="mb-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <svg class="h-6 w-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Schedule Viewer
+            </h1>
+            <button id="toggleView" class="px-4 py-2 border rounded-md bg-white hover:bg-gray-100">Show Week</button>
+        </div>
+
+        <div id="schedule" class="bg-white rounded-lg shadow-lg">
+            <div id="dayContainer" class="grid grid-cols-1 divide-y divide-gray-200"></div>
+        </div>
+    </div> -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // const sampleEvents = [
+        //     { id: 1, title: "Họp giao ban", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "10:00 AM", ngay_dien_ra: "21/4/2025", duration: "2:30", place: "Hội trường" },
+        //     { id: 2, title: "Họp giao ban giảng viên", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "12:30 PM", ngay_dien_ra: "22/4/2025", duration: "2:30", place: "Hội trường" },
+        //     { id: 3, title: "Chào đón quý vị đại biểu Thành Đoàn Cần Thơ", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "2:00 PM", ngay_dien_ra: "23/4/2025", duration: "2:30", place: "Sảnh E" },
+        //     { id: 4, title: "Họp với đơn vị Viettel", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "11:00 AM", ngay_dien_ra: "23/4/2025", duration: "2:30", place: "Hội trường" },
+        //     { id: 5, title: "Họp với đơn vị VNPT", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "9:00 AM", ngay_dien_ra: "24/4/2025", duration: "2:30", place: "" },
+        //     { id: 6, title: "Họp để kết luận về việc đẩy mạnh sử dụng AI trong trường học", mo_ta: "Mô tả thông tin", thanh_phan: "", time: "9:00 AM", ngay_dien_ra: "24/4/2025", duration: "2:30", place: "Hội trường" },
+        // ];
+
+        fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRbdUKE0n3WKjcJhm4yw117SoDUSVFei_O7Sf79RO0xwAF1Qd9Qpmk8dVTHn5qKDeg_wKlRXc60_tWG/pub?gid=0&single=true&output=csv")
+            .then(res => res.text())
+            .then(csvText => {
+                // convert CSV to JSON
+                const rows = csvText.split("\n").map(row => row.split(","));
+                const headers = rows[0];
+                const data = rows.slice(1).map(row => {
+                    let obj = {};
+                    headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
+                    return obj;
+                });
+                console.log(data); // giống sampleEvents
+                const sampleEvents = data;
+                renderSchedule(data);
+            });
+
+        function formatDate(date) {
+            return date.toLocaleDateString('vi-VN'); // "dd/mm/yyyy"
+        }
+
+        function renderSchedule(data, daysToShow = 7) {
+            const today = new Date();
+            const scheduleWrapper = $('#scheduleWrapper');
+            scheduleWrapper.empty();
+
+            for (let i = 0; i < daysToShow; i++) {
+
+
+
+                const dayDate = new Date();
+                dayDate.setDate(today.getDate() + i);
+                const formatted = formatDate(dayDate);
+
+                const eventsForDay = data.filter(e => e.ngay_dien_ra === formatted);
+
+                const isToday = i === 0;
+                const $dayBlock = $(`
+                    <div class="day-block ${isToday ? " today" : ""}">
+                        <div class="day-title">
+                            ${dayDate.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' })}
+                            ${isToday ? '<span style="color: #11467F;">(Hôm nay)</span>' : ''}
+                        </div>
+                    </div>
+                    `);
+
+                if (eventsForDay.length === 0) {
+                    $dayBlock.append('<div class="text-gray-500">Không có sự kiện.</div>');
+                } else {
+                    eventsForDay.forEach(event => {
+                        if (event.hien_thi && event.hien_thi.trim() !== "") {
+                            console.log("Hiển thị STT" + event.STT);
+                            const pad = (num) => num.toString().padStart(2, '0');
+                            const [day, month, year] = event.ngay_dien_ra.split("/");
+                            const formattedDate = `${year}-${pad(month)}-${pad(day)}T${event.gio_bat_dau}:00`;
+                            const startDateTime = new Date(formattedDate);
+                            console.log("Thời gian bắt đầu:", startDateTime);
+                            const [hours, minutes] = event.thoi_luong.split(":").map(Number);
+                            const endDateTime = new Date(startDateTime.getTime() + (hours * 60 + minutes) * 60000);
+                            console.log("Thời gian kết thúc:", endDateTime);
+                            const now = new Date();
+
+                            var isInProgress = false;
+                            if (now >= startDateTime && now <= endDateTime) {
+                                console.log("Cuộc họp đang diễn ra");
+                                isInProgress = true;
+                            } else if (now < startDateTime) {
+                                console.log("Cuộc họp chưa bắt đầu");
+                            } else {
+                                console.log("Cuộc họp đã kết thúc");
+                            }
+
+                            $dayBlock.append(`
+                                <div style = "display: flex; justify-content: space-between;">
+                                    <div class="event-title">
+                                        ${isInProgress == true ? '<i class="fa-regular fa-circle-dot fa-beat-fade" style="color: #FF272E; margin-right: 5px;"></i>' : ""}
+                                        <i>${event.ten_cuoc_hop}</i>
+                                        ${(event.noi_bat && event.noi_bat.trim() !== "") ? '<i class="fa-solid fa-star" style="color: #FFC107; margin-left: 3px;"></i>' : ""}
+                                    </div>
+                                    <div style="min-width: 2rem;"></div>
+                                    <div class="event-tap">${event.gio_bat_dau} - ${event.noi_dien_ra} (${event.thoi_luong} giờ)</div>
+                                </div >
+                                <div class="event">
+                                    <div class="event-desc" style="display: flex; justify-content: space-between;">
+                                        <div>Thành phần tham gia: ${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}</div>
+                                        <div style="min-width: 2rem;"></div>
+                                        <div>Nội dung chương trình: ${event.mo_ta?.trim() ? event.mo_ta : "Đang cập nhật..."}</div>
+                                    </div>
+                                </div>
+                            `);
+                            scheduleWrapper.append($dayBlock);
+                        }
+                    });
+                }
+
+            }
+        }
+
+        let isThreeDayView = false;
+        $('#toggleView').on('click', function () {
+            isThreeDayView = !isThreeDayView;
+            $(this).text(isThreeDayView ? 'Hiển thị 7 ngày' : 'Hiển thị 3 ngày');
+            renderSchedule(isThreeDayView ? 3 : 7);
+        });
+
+        $(document).ready(function () {
+            // Mặc định 7 ngày
+        });
+    </script>
+</body>
+
+</html>
