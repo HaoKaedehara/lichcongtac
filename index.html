@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Schedule Viewer</title>
+    <title>LICH CONG TASK</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -13,8 +13,12 @@
         integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
+        .row {
+            margin-bottom: 0px !important;
+        }
+
         .day-block {
-            margin-bottom: 18px;
+            /* margin-bottom: .8rem !important; */
             /* padding: 16px; */
             /* border: 1px solid #ccc; */
             border-radius: 8px;
@@ -84,6 +88,14 @@
         .align-items-center-bs {
             align-items: baseline !important;
         }
+
+        .mb-a {
+            margin-bottom: 0.8rem;
+        }
+
+        .row {
+            --bs-gutter-x: 1rem !important;
+        }
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -96,8 +108,20 @@
 <div class="container0" style="margin: 0px auto">
     <div>
 
-        <div class="flex justify-between items-center" style="margin: 18px 0px 20px 0px">
-            <img src="https://nctu.edu.vn/webp/logo_truong.webp" alt="" width="20%" srcset="">
+        <div class="row mt-2 mb-3">
+            <div class="col-4"><img src="https://nctu.edu.vn/webp/logo_truong.webp" alt="" width="50%" srcset=""></div>
+            <div class="col-4 text-center">
+                <h3 class="font-bold text-gray-900 mb-0">
+                    LỊCH CÔNG TÁC
+                </h3>
+            </div>
+            <div class="col-4">
+                <p class="text-xl font-bold text-gray-900 mb-0" id="weekShowing">Đang lấy thông tin...</p>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center d-none" style="margin: 18px 0px 20px 0px">
+
             <p class="text-2xl font-bold text-gray-900 flex mb-0">
                 <!-- <svg class="h-6 w-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -335,7 +359,10 @@
                     $dayBlock.append('<div class="text-gray-500">Không có sự kiện.</div>');
                 } else {
                     eventsForDay.forEach(event => {
-                        $('#weekShowing').html(event.lich_tuan);
+                        if (event.lich_tuan.trim != "") {
+                            $('#weekShowing').html(event.lich_tuan);
+                        }
+                        console.log(event.lich_tuan);
                         if (event.hien_thi && event.hien_thi.trim() !== "") {
                             console.log("Hiển thị STT" + event.STT);
                             const pad = (num) => num.toString().padStart(2, '0');
@@ -361,7 +388,7 @@
                             }
 
                             $dayBlock.append(`
-                            <div class="col-sm-6 mb-2">
+                            <div class="col-sm-6 mb-a">
                                 <div class="card" style="height: 100%;">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -371,15 +398,14 @@
                                                 ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}
                                             </p>
                                             <p class="card-title">
-                                                    ${isInProgress == true ? '<i class="fa-regular fa-circle-dot fa-beat-fade" style="color: #FF272E; margin-right: 5px;"></i>' : ""}
-                                                    <i class="bi bi-geo-alt me-1"></i> ${event.noi_dien_ra}
+                                                <i class="bi bi-geo-alt me-1"></i> ${event.noi_dien_ra}
                                             </p>
                                         </div>
                                         <p class="strong"><strong>${event.ten_cuoc_hop}
                                             ${(event.noi_bat && event.noi_bat.trim() !== "") ? '<i class="fa-solid fa-star me-2" style="color: #FFC107; margin-left: 3px;"></i>' : ""}
                                         </strong></p>
                                         <div class="row">
-                                            <div class="col-5">
+                                            <div class="col-6 d-none">
                                                 <div class="d-flex align-items-center-bs">
                                                     <div>
                                                         <i class="bi bi-person me-1"></i>
@@ -389,7 +415,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-7">
+                                            <div class="col-12">
                                                 <div class="d-flex align-items-center-bs">
                                                     <div class="d-flex align-items-center-bs">
                                                         <i class="fa-solid fa-users me-2"></i>
