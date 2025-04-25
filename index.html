@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lịch công tác</title>
+    <title>Lich cong tac</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
@@ -41,6 +41,7 @@
             font-weight: bold;
             font-size: 18px;
             padding: 10px;
+            text-align: justify;
         }
 
         .event-desc {
@@ -49,28 +50,42 @@
 
         .event-tap {
             float: right;
-            font-weight: bold;
+            /* font-weight: bold; */
+            text-align: justify;
+            font-weight: 500;
             font-size: 18px;
             text-align: right;
             padding: 10px;
         }
 
-        .event::before {
-            content: "";
-            position: absolute;
-            left: 16px;
-            /* canh theo padding text */
-            right: 16px;
-            bottom: 0;
-            height: 3px;
-            background-color: #0078d4;
-            /* Màu giống Windows Security */
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-            border-radius: 2px;
-            transform-origin: left;
+        .container {
+            width: 75% !important;
+        }
+
+        .card {
+            background-color: #EBF0F7 !important;
+            border: none !important;
+        }
+
+        .card i,
+        svg {
+            color: #156082
+        }
+
+        .card .strong {
+            margin: .5rem 0px;
+        }
+
+        .card p {
+            padding-bottom: 0px;
+            margin-bottom: 0px;
         }
     </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -87,14 +102,37 @@
                 Lịch công tác
             </p>
             <!-- <button id="toggleView" class="px-4 py-2 border rounded-md bg-white hover:bg-gray-100">Show Week</button> -->
-            <p class="text-xl font-bold text-gray-900 flex">Tuần 12 (00/00 - 00/00/2025)</p>
+            <!-- <p class="text-xl font-bold text-gray-900 flex">Tuần 12 (00/00 - 00/00/2025)</p> -->
+            <p class="text-xl font-bold text-gray-900 flex" id="weekShowing">Đang lấy thông tin...</p>
         </div>
     </div>
     <div class="controls">
         <!-- <button id="toggleView">Hiển thị 3 ngày</button> -->
     </div>
+
+    <div class="row" id="lichCongTac">
+        <!-- <div class="col-sm-6 mb-3">
+            <div class="card" style="height: 100%;">
+                <div class="card-body">
+                    <p class="card-title"><i class="bi bi-clock me-2"></i>9:00</p>
+                    <p class="strong"><strong>Opening Remarks</strong></p>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><i class="bi bi-person me-1"></i>Dr. Smith</p>
+                            <p><i class="bi bi-geo-alt me-1"></i>E Hall</p>
+                        </div>
+                        <div class="col-6">
+                            <p><i class="fa-solid fa-users"></i> All guys </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
     <div id="scheduleWrapper"></div>
 </div>
+
 
 
 <body class="bg-white">
@@ -115,6 +153,10 @@
             <div id="dayContainer" class="grid grid-cols-1 divide-y divide-gray-200"></div>
         </div>
     </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -140,7 +182,8 @@
                 });
                 console.log(data); // giống sampleEvents
                 const sampleEvents = data;
-                renderSchedule(data);
+                // renderSchedule(data);
+                renderLichCongTac(data);
             });
 
         function formatDate(date) {
@@ -189,6 +232,7 @@
                             const now = new Date();
 
                             var isInProgress = false;
+                            var isOver = false;
                             if (now >= startDateTime && now <= endDateTime) {
                                 console.log("Cuộc họp đang diễn ra");
                                 isInProgress = true;
@@ -196,26 +240,128 @@
                                 console.log("Cuộc họp chưa bắt đầu");
                             } else {
                                 console.log("Cuộc họp đã kết thúc");
+                                isOver = true;
                             }
 
                             $dayBlock.append(`
                                 <div style = "display: flex; justify-content: space-between;">
-                                    <div class="event-title">
-                                        ${isInProgress == true ? '<i class="fa-regular fa-circle-dot fa-beat-fade" style="color: #FF272E; margin-right: 5px;"></i>' : ""}
+                                    <div class="event-title" style="max-witdh: 50%; min-width: 45%;">
+                                        <p style="font-weight: 400;">Nội dung: </p>                                        
                                         <i>${event.ten_cuoc_hop}</i>
                                         ${(event.noi_bat && event.noi_bat.trim() !== "") ? '<i class="fa-solid fa-star" style="color: #FFC107; margin-left: 3px;"></i>' : ""}
                                     </div>
                                     <div style="min-width: 2rem;"></div>
-                                    <div class="event-tap">${event.gio_bat_dau} - ${event.noi_dien_ra} (${event.thoi_luong} giờ)</div>
+                                    <div class="event-tap" style="max-witdh: 50%; min-width: 45%;">Địa điểm:<br>
+                                        ${isInProgress == true ? '<i class="fa-regular fa-circle-dot fa-beat-fade" style="color: #FF272E; margin-right: 5px;"></i>' : ""}${event.noi_dien_ra} <br>
+                                        ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}</div>
                                 </div >
                                 <div class="event">
                                     <div class="event-desc" style="display: flex; justify-content: space-between;">
-                                        <div>Thành phần tham gia: ${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}</div>
+                                        <div style='max-width: 50%; min-width: 45%;'>Thành phần tham gia: ${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}</div>
                                         <div style="min-width: 2rem;"></div>
-                                        <div>Nội dung chương trình: ${event.mo_ta?.trim() ? event.mo_ta : "Đang cập nhật..."}</div>
+                                        <div style='max-width: 50%; min-width: 45%;'>Nội dung chương trình: ${event.mo_ta?.trim() ? event.mo_ta : "Đang cập nhật..."}</div>
                                     </div>
                                 </div>
                             `);
+                            scheduleWrapper.append($dayBlock);
+
+                            $dayBlock.append(`
+                            <div class="col-sm-6 mb-3">
+                                <div class="card" style="height: 100%;">
+                                    <div class="card-body">
+                                        <p class="card-title"><i class="bi bi-clock me-2"></i>${event.gio_bat_dau} - ${event.du_kien_ket_thuc}</p>
+                                        <p class="strong"><strong>${event.ten_cuoc_hop}</strong></p>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p><i class="bi bi-person me-1"></i>${event.chu_tri}</p>
+                                                <p><i class="bi bi-geo-alt me-1"></i>${event.noi_dien_ra}</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p><i class="fa-solid fa-users me-1"></i>${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`);
+                        }
+                    });
+                }
+
+            }
+        }
+
+        function renderLichCongTac(data, daysToShow = 7) {
+            const today = new Date();
+            const scheduleWrapper = $('#scheduleWrapper');
+            scheduleWrapper.empty();
+
+            for (let i = 0; i < daysToShow; i++) {
+
+
+
+                const dayDate = new Date();
+                dayDate.setDate(today.getDate() + i);
+                const formatted = formatDate(dayDate);
+
+                const eventsForDay = data.filter(e => e.ngay_dien_ra === formatted);
+
+                const isToday = i === 0;
+                const $dayBlock = $(`
+                    <div class="row day-block ${isToday ? " today" : ""}">
+                        <div class="day-title">
+                            ${dayDate.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' })}
+                            ${isToday ? '<span style="color: #11467F;">(Hôm nay)</span>' : ''}
+                        </div>
+                    </div>
+                    `);
+
+                if (eventsForDay.length === 0) {
+                    $dayBlock.append('<div class="text-gray-500">Không có sự kiện.</div>');
+                } else {
+                    eventsForDay.forEach(event => {
+                        $('#weekShowing').html(event.lich_tuan);
+                        if (event.hien_thi && event.hien_thi.trim() !== "") {
+                            console.log("Hiển thị STT" + event.STT);
+                            const pad = (num) => num.toString().padStart(2, '0');
+                            const [day, month, year] = event.ngay_dien_ra.split("/");
+                            const formattedDate = `${year}-${pad(month)}-${pad(day)}T${event.gio_bat_dau}:00`;
+                            const startDateTime = new Date(formattedDate);
+                            console.log("Thời gian bắt đầu:", startDateTime);
+                            const [hours, minutes] = event.thoi_luong.split(":").map(Number);
+                            const endDateTime = new Date(startDateTime.getTime() + (hours * 60 + minutes) * 60000);
+                            console.log("Thời gian kết thúc:", endDateTime);
+                            const now = new Date();
+
+                            var isInProgress = false;
+                            var isOver = false;
+                            if (now >= startDateTime && now <= endDateTime) {
+                                console.log("Cuộc họp đang diễn ra");
+                                isInProgress = true;
+                            } else if (now < startDateTime) {
+                                console.log("Cuộc họp chưa bắt đầu");
+                            } else {
+                                console.log("Cuộc họp đã kết thúc");
+                                isOver = true;
+                            }
+
+                            $dayBlock.append(`
+                            <div class="col-sm-6 mb-3">
+                                <div class="card" style="height: 100%;">
+                                    <div class="card-body">
+                                        <p class="card-title"><i class="bi bi-clock me-2"></i>${event.gio_bat_dau} - ${event.du_kien_ket_thuc}</p>
+                                        <p class="strong"><strong>${event.ten_cuoc_hop}</strong></p>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p><i class="bi bi-person me-1"></i>${event.chu_tri}</p>
+                                                <p><i class="bi bi-geo-alt me-1"></i>${event.noi_dien_ra}</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p><i class="fa-solid fa-users me-1"></i>${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`);
                             scheduleWrapper.append($dayBlock);
                         }
                     });
@@ -234,6 +380,26 @@
         $(document).ready(function () {
             // Mặc định 7 ngày
         });
+
+        function renderThanhPhan(strings) {
+            const thanhPhanArr = strings
+                .split(";")
+                .map(s => s.trim())
+                .filter(s => s !== "");
+
+            const html = thanhPhanArr.map(thanhPhanArr => {
+                const value = thanhPhanArr.trim();
+                let bgColor = "#eee";
+
+                if (value === "Ban giám hiệu") {
+                    bgColor = "lightgreen";
+                } else if (value === "Hội đồng Trường") {
+                    bgColor = "pink";
+                }
+
+                return `<div style="background-color: ${bgColor}; padding: 8px; margin: 4px 0;">${value}</div>`;
+            }).join("");
+        }
     </script>
 </body>
 
