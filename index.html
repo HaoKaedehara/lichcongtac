@@ -13,6 +13,10 @@
         integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
+        body {
+            background-color: #fafafa !important;
+        }
+
         .row {
             margin-bottom: 0px !important;
         }
@@ -67,8 +71,9 @@
         }
 
         .card {
-            background-color: #EBF0F7 !important;
-            border: none !important;
+            background-color: #ffffff !important;
+            /* border: solid 1px #156082; */
+            box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
         }
 
         .card i,
@@ -95,6 +100,27 @@
 
         .row {
             --bs-gutter-x: 1rem !important;
+        }
+
+        .card-body {
+            padding: .5rem !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .letter-spacing {
+
+            letter-spacing: 1.1px;
+        }
+
+        .word-spacing {
+
+            word-spacing: 1.3px;
+        }
+
+        .card-title {
+            color: #5b5b5b !important;
         }
     </style>
 
@@ -314,7 +340,7 @@
                             $dayBlock.append(`
                             <div class="col-sm-6 mb-3">
                                 <div class="card" style="height: 100%;">
-                                    <div class="card-body">
+                                    <div class="card-body ">
                                         <p class="card-title"><i class="bi bi-clock me-1"></i>${event.gio_bat_dau} - ${event.du_kien_ket_thuc}</p>
                                         <p class="strong"><strong>${event.ten_cuoc_hop}</strong></p>
                                         <div class="row">
@@ -361,7 +387,7 @@
 
                 const isToday = i === 0;
                 const $dayBlock = $(`
-                    <div class="row day-block ${isToday ? " today" : ""}">
+                    <div class="row py-2 day-block ${isToday ? " today" : ""}">
                         <div class="day-title">
                             ${dayDate.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' })}
                             ${isToday ? '<span style="color: #11467F;">(Hôm nay)</span>' : ''}
@@ -404,21 +430,11 @@
                             $dayBlock.append(`
                             <div class="col-sm-6 mb-a">
                                 <div class="card" style="height: 100%;">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <p class=" card-title">
-                                                <i class="bi bi-clock"></i> 
-                                                ${isInProgress == true ? '<i class="fa-regular fa-circle-dot fa-beat-fade" style="color: #FF272E; margin-right: 5px;"></i>' : ""}
-                                                ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}
-                                            </p>
-                                            <p class="card-title">
-                                                ${event.noi_dien_ra.trim() !== "" ? '<i class="bi bi-geo-alt"></i> ' + event.noi_dien_ra : ''}
-                                            </p>
-                                        </div >
-                                        <p class="strong"><strong>${event.ten_cuoc_hop}
-                                            ${(event.noi_bat && event.noi_bat.trim() !== "") ? '<i class="fa-solid fa-star" style="color: #FFC107; margin-left: 3px;"></i>' : ""}
-                                        </strong></p>
-                                        <div class="row">
+                                    <div class="card-body p-3 mt-1">                                        
+                                        <div><strong class="letter-spacing word-spacing " >${event.ten_cuoc_hop}
+                                            ${(event.noi_bat && event.noi_bat.trim() !== "") ? '' : ""}
+                                        </strong>
+                                        <div class="row py-1">
                                             <div class="col-6 d-none">
                                                 <div class="d-flex align-items-center-bs">
                                                     <div>
@@ -430,9 +446,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-12">
-                                                <div class="d-flex align-items-center-bs">
-                                                    <div class="d-flex align-items-center-bs" style="margin-right: 3px;">
-                                                        <i class="fa-solid fa-users"> </i> 
+                                                <div class="d-flex">
+                                                    <div class="me-1">
+                                                        <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="100 90 640 512" data-fa-i2svg=""><g id="Layer_1" focusable="false">
+    <g>
+      <path d="M101.85,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM505.2,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM272.82,416.25c-15.03-8.5-32.39-13.34-50.89-13.34h-91.11c-57.16,0-103.53,46.36-103.53,103.53h-.08c0,11.49,9.32,20.74,20.74,20.74h132.79M478.65,419.05c16.05-10.22,35.1-16.14,55.52-16.14h91.11c57.24,0,103.61,46.36,103.61,103.53,0,11.42-9.24,20.74-20.74,20.74h-145.35" style="fill: none; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
+      <path d="M275.77,282.05c0-53.02,42.98-96,96-96s96,42.98,96,96-42.98,96-96,96-96-42.98-96-96ZM179.77,543.35c0-73.6,59.7-133.3,133.3-133.3h117.3c73.7,0,133.4,59.7,133.4,133.3,0,14.7-11.9,26.7-26.7,26.7H206.37c-14.7,0-26.7-11.9-26.7-26.7h.1Z" style="fill: #196082; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
+    </g>
+  </g></svg>
                                                     </div> 
                                                     <div class="text-start">
                                                     ${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}
@@ -440,9 +461,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div >
-                                </div >
-                            </div > `);
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2 pt-1">
+                                            <p class="card-title">
+                                                <i class="fa-regular fa-clock ${isInProgress == true ?'text-danger fa-bounce':''}"></i> 
+                                                ${isInProgress == true ? '' : ""}
+                                                ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}
+                                            </p>
+                                            <p class="card-title">
+                                                ${event.noi_dien_ra.trim() !== "" ? '<i class="bi bi-geo-alt"></i> ' + event.noi_dien_ra : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> `);
                             scheduleWrapper.append($dayBlock);
                         }
                     });
