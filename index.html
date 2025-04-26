@@ -448,12 +448,12 @@
                                             <div class="col-12">
                                                 <div class="d-flex">
                                                     <div class="me-1">
-                                                        <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="100 90 640 512" data-fa-i2svg=""><g id="Layer_1" focusable="false">
-    <g>
-      <path d="M101.85,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM505.2,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM272.82,416.25c-15.03-8.5-32.39-13.34-50.89-13.34h-91.11c-57.16,0-103.53,46.36-103.53,103.53h-.08c0,11.49,9.32,20.74,20.74,20.74h132.79M478.65,419.05c16.05-10.22,35.1-16.14,55.52-16.14h91.11c57.24,0,103.61,46.36,103.61,103.53,0,11.42-9.24,20.74-20.74,20.74h-145.35" style="fill: none; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
-      <path d="M275.77,282.05c0-53.02,42.98-96,96-96s96,42.98,96,96-42.98,96-96,96-96-42.98-96-96ZM179.77,543.35c0-73.6,59.7-133.3,133.3-133.3h117.3c73.7,0,133.4,59.7,133.4,133.3,0,14.7-11.9,26.7-26.7,26.7H206.37c-14.7,0-26.7-11.9-26.7-26.7h.1Z" style="fill: #196082; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
-    </g>
-  </g></svg>
+                                                        <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="100 90 640 512" data-fa-i2svg="">
+                                                            <g id="Layer_1" focusable="false"><g>
+                                                                <path d="M101.85,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM505.2,303.49c0-41.18,33.38-74.56,74.56-74.56s74.56,33.38,74.56,74.56-33.38,74.56-74.56,74.56-74.56-33.38-74.56-74.56ZM272.82,416.25c-15.03-8.5-32.39-13.34-50.89-13.34h-91.11c-57.16,0-103.53,46.36-103.53,103.53h-.08c0,11.49,9.32,20.74,20.74,20.74h132.79M478.65,419.05c16.05-10.22,35.1-16.14,55.52-16.14h91.11c57.24,0,103.61,46.36,103.61,103.53,0,11.42-9.24,20.74-20.74,20.74h-145.35" style="fill: none; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
+                                                                <path d="M275.77,282.05c0-53.02,42.98-96,96-96s96,42.98,96,96-42.98,96-96,96-96-42.98-96-96ZM179.77,543.35c0-73.6,59.7-133.3,133.3-133.3h117.3c73.7,0,133.4,59.7,133.4,133.3,0,14.7-11.9,26.7-26.7,26.7H206.37c-14.7,0-26.7-11.9-26.7-26.7h.1Z" style="fill: #196082; stroke: #196082; stroke-miterlimit: 10; stroke-width: 13px;"></path>
+                                                            </g></g>
+                                                        </svg>
                                                     </div> 
                                                     <div class="text-start">
                                                     ${event.thanh_phan?.trim() ? event.thanh_phan : "Đang cập nhật..."}
@@ -462,15 +462,24 @@
                                             </div>
                                         </div>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-2 pt-1">
-                                            <p class="card-title">
-                                                <i class="fa-regular fa-clock ${isInProgress == true ?'text-danger fa-bounce':''}"></i> 
-                                                ${isInProgress == true ? '' : ""}
-                                                ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}
-                                            </p>
-                                            <p class="card-title">
-                                                ${event.noi_dien_ra.trim() !== "" ? '<i class="bi bi-geo-alt"></i> ' + event.noi_dien_ra : ''}
-                                            </p>
+                                        <div class="d-flex justify-content-between align-items-center mt-2 pt-1">                                            
+                                            <div class="d-flex card-title">
+                                                <div style="margin-right: 0.4rem; margin-left: 0.1rem;">
+                                                    <i class="fa-regular fa-clock ${isInProgress == true ? 'text-danger fa-bounce' : ''}"></i>
+                                                </div> 
+                                                <div>
+                                                    ${isInProgress == true ? '' : ""}
+                                                    ${event.gio_bat_dau} - ${event.du_kien_ket_thuc}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex card-title">
+                                                <div style="margin-right: 0.4rem; margin-left: 0.1rem;">
+                                                    <i class="bi bi-geo-alt"></i>
+                                                </div> 
+                                                <div>
+                                                   ${event.noi_dien_ra.trim() !== "" ? ' ' + event.noi_dien_ra : ''}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
