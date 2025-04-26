@@ -401,7 +401,7 @@
                     eventsForDay.forEach(event => {
                         if (event.lich_tuan.trim() != "") {
                             $('#weekShowing').html(event.lich_tuan);
-                        }
+                        } else {$('#weekShowing').html("");}
                         console.log(event.lich_tuan);
                         if (event.hien_thi && event.hien_thi.trim() !== "") {
                             console.log("Hiển thị STT" + event.STT);
