@@ -427,9 +427,9 @@
                     $dayBlock.append('<div class="text-gray-500">Không có sự kiện.</div>');
                 } else {
                     eventsForDay.forEach(event => {
-                        if (event.lich_tuan.trim() !== "") {
+                        
                             $('#weekShowing').html(event.lich_tuan);
-                        }
+                        
 
                         if (event.hien_thi && event.hien_thi.trim() !== "") {
                             const pad = (num) => num.toString().padStart(2, '0');
@@ -541,6 +541,8 @@
                     eventsForDay.forEach(event => {
                         if (event.lich_tuan.trim() != "") {
                             $('#weekShowing').html(event.lich_tuan);
+                        } else{
+                             $('#weekShowing').html("");
                         }
                         console.log(event.lich_tuan);
                         if (event.hien_thi && event.hien_thi.trim() !== "") {
